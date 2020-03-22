@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>JavaScript: API oraz FETCH - admin, devmentor.pl</title>
+</head>
+<body>
+    <h1>Panel administratora</h1>
+    <section class="panel">
+        <ul class="panel__excurions excursions">
+            <li data-id="1" class="excurions__item excurions__item--prototype">
+                <header class="excursions__header">
+                    <h2 class="excursions__title">Ogrodzieniec</h2>
+                    <p class="excursions__description">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Amet aliquam quam laboriosam quaerat temporibus dicta vitae maxime! Nemo, nobis veritatis?</p>
+                </header>
+                <form class="excursions__form">
+                    <div class="excurions__field">
+                        <label class="excursions__field-name">
+                            Dorosły: <strong>99</strong>PLN
+                        </label>
+                    </div>
+                    <div class="excurions__field">
+                        <label class="excursions__field-name">
+                            Dziecko: <strong>50</strong>PLN
+                        </label>
+                    </div>
+                    <div class="excurions__field excurions__field--submit">
+                        <input 
+                            class="excursions__field-input excursions__field-input--update" 
+                            value="edytuj"
+                            type="submit"
+                        />
+                        <input 
+                            class="excursions__field-input excursions__field-input--remove" 
+                            value="usuń"
+                            type="submit"
+                        />
+                    </div>
+                </form>
+            </li>
+        </ul>
+        <section>
+            <form class="form" novalidate>
+                <div class="form__row">
+                    <label class="form__label">
+                        Nazwa:<input class="form__field" name="name" />
+                    </label>
+                </div>
+                <div class="form__row">
+                    <label class="form__label">
+                        Opis:<textarea class="form__field form__field--longtext" name="description"></textarea>
+                    </label>
+                </div>
+                <div class="form__row">
+                    <label class="form__label">
+                        Cena dorosły:<input class="form__field" type="number" name="name" />
+                    </label>
+                </div>
+                <div class="form__row">
+                    <label class="form__label">
+                        Cena dziecko:<input class="order__form__field" type="number" name="name" />
+                    </label>
+                </div>
+                <div class="order__field order__field--submit">
+                    <input 
+                        class="order__field-input order__field-submit" 
+                        value="dodaj"
+                        type="submit"
+                    />
+                </div>
+            </form>
+           
+        </section>
+    </section>
+
+</body>
+</html>
