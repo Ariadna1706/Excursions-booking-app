@@ -15,6 +15,7 @@ module.exports = {
         filename: '[name].min.js',
         // definiuję nazwę pliku wyjściowego
     },
+    devtool: 'inline-source-map',
     module: {
         rules: [
             {
