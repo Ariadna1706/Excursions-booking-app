@@ -52,6 +52,8 @@ Potem dopiero możesz go uruchomić poprzez `npm start`.
 
 Jeśli chcesz odpalić wersję `client` to wystarczy wpisać w przeglądarkę `http://localhost:8080/index.html` natomiast `admin` będzie dostępny pod adresem: `http://localhost:8080/admin.html`.
 
+> **Uwaga!** Jeśli nie widzisz poprawnych "linii" błędów w konsoli to prawodpodobnie nie masz włączonej obsługi source maps dla plików JavaScript. Możesz to zmienić w [ustawieniach przeglądarki Chrome](https://developers.google.com/web/tools/chrome-devtools/javascript/source-maps).
+
 ### JSON Server
 
 Podczas przerabiania materiałów zainstalowaliśmy globalnie JSON Server dlatego nie musimy go instalować - wystarczy, że go uruchomimy. Pamietaj, że bez jego uruchomienia nasze API nie będzie działać. 
