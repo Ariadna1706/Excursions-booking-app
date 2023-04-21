@@ -51,3 +51,8 @@ ul {
 .form__field--longtext {
     height: 100px;
 }
+
+
+.excursions__item--prototype{
+    display: none;
+}

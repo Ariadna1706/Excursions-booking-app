@@ -1,4 +1,12 @@
 {
-    "excursions": [],
-    "orders": []
+  "excursions": [
+    {
+      "name": "Skierniewice",
+      "description": "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Amet aliquam quam laboriosam quaerat temporibus dicta vitae maxime! Nemo, nobis veritatis?",
+      "adultPrice": "100",
+      "childPrice": "50",
+      "id": 1
+    }
+  ],
+  "orders": []
 }
