@@ -2,10 +2,9 @@ import "./../css/admin.css";
 
 import ExcursionsAPI from "./ExcursionsAPI";
 
-const adminPanel = document.querySelector(".panel");
-const formSection = adminPanel.querySelector(".form");
+const api = new ExcursionsAPI();
+
 const liProto = document.querySelector(".excursions__item--prototype");
-const apiUrl = "http://localhost:3000/excursions";
 const ulEl = document.querySelector(".panel__excursions");
 
 document.addEventListener("DOMContentLoaded", init);
@@ -19,13 +18,8 @@ function init() {
 }
 
 function loadExcursions() {
-  fetch(apiUrl)
-    .then((resp) => {
-      if (resp.ok) {
-        return resp.json();
-      }
-      return Promise.reject(resp);
-    })
+  api
+    .loadData()
     .then((data) => {
       insertExcursion(data);
     })
@@ -37,66 +31,30 @@ function addExcursions() {
   form.addEventListener("submit", (e) => {
     e.preventDefault();
     const errors = [];
-
-    const name = e.target.elements[0];
-    const description = e.target.elements[1];
-    const adultPrice = e.target.elements[2];
-    const childPrice = e.target.elements[3];
-
-    const data = {
-      name: name.value,
-      description: description.value,
-      adultPrice: adultPrice.value,
-      childPrice: childPrice.value,
-    };
-
-    if (name.value === "") {
-      errors.push("Nazwa: to pole jest obowiązkowe");
-    }
-
-    if (description.value === "") {
-      errors.push("Opis: to pole jest obowiązkowe");
-    }
-    if (adultPrice.value === "") {
-      errors.push("Cena dorosły: to pole jest obowiązkowe");
-    }
-    if (childPrice.value === "") {
-      errors.push("Cena dzecko: to pole jest obowiązkowe");
-    }
+    const [name, description, adultPrice, childPrice] = e.target.elements;
+    const data = createDatatoInsert(name, description, adultPrice, childPrice);
+    fillExcursionFormChecker(errors, name, description, adultPrice, childPrice);
     const ulEl = document.querySelector(".errors");
+    clearHTML(ulEl);
 
     if (errors.length > 0) {
-      ulEl.innerText = "";
-
-      errors.forEach(function (err) {
+      errors.forEach((err) => {
         const liElement = document.createElement("li");
         liElement.innerText = err;
         ulEl.appendChild(liElement);
       });
     } else {
-      ulEl.innerText = "";
-      const options = {
-        method: "POST",
-        body: JSON.stringify(data),
-        headers: { "Content-Type": "application/json" },
-      };
-      fetch(apiUrl, options)
-        .then((resp) => console.log(resp))
+      api
+        .addData(data)
         .catch((err) => console.error(err))
         .finally(loadExcursions);
-
-      name.value = "";
-      description.value = "";
-      adultPrice.value = "";
-      childPrice.value = "";
+      clearFormData(name, description, adultPrice, childPrice);
     }
-
-    console.log(errors);
   });
 }
 
 function insertExcursion(excursionsArr) {
-  ulEl.innerHTML = "";
+  clearHTML(ulEl);
 
   excursionsArr.forEach((item) => {
     const liElement = liProto.cloneNode(true);
@@ -104,24 +62,18 @@ function insertExcursion(excursionsArr) {
     liElement.classList.remove("excursions__item--prototype");
     const headerEl = liElement.firstElementChild;
     const cityName = headerEl.firstElementChild;
-    cityName.textContent = item.name;
     const description = headerEl.lastElementChild;
-    description.textContent = item.description;
+    // description.textContent = item.description;
     const liForm = liElement.lastElementChild;
-    const liLabel = liForm.querySelectorAll("strong");
+    const liLabel = liForm.querySelectorAll("span");
     const adultPrice = liLabel[0];
-    // adultPrice.textContent = +item.adultPrice;
     const childPrice = liLabel[1];
-    //childPrice.textContent = +item.childPrice;
     liElement.dataset.id = item.id;
 
-    adultPrice.innerHTML = `
-    <span>${+item.adultPrice}</span>
-    `;
-
-    childPrice.innerHTML = `
-    <span>${+item.childPrice}</span>
-    `;
+    cityName.innerHTML = ` <span>${item.name}</span> `;
+    description.innerHTML = ` <span>${item.description}</span> `;
+    adultPrice.innerHTML = ` <span>${+item.adultPrice}</span>`;
+    childPrice.innerHTML = ` <span>${+item.childPrice}</span>`;
   });
 }
 
@@ -131,10 +83,13 @@ function removeExcursions() {
 
     const targetEl = e.target;
 
+    console.log(targetEl);
+    // problem z działaniem tej funkcji
     if (targetEl.value === "usuń") {
       const id = ulEl.firstElementChild.dataset.id;
-      const options = { method: "DELETE" };
-      fetch(`${apiUrl}/${id}`, options)
+      console.log(id);
+      api
+        .removeData(id)
         .then((resp) => console.log(resp))
         .catch((err) => console.error(err))
         .finally(loadExcursions);
@@ -148,11 +103,13 @@ function updateExcursions() {
 
     const targetEl = e.target;
 
-    if (targetEl.value === "edytuj") {
+    if (targetEl.className.includes("excursions__field-input--update")) {
       const buttons = targetEl.parentElement;
       const form = buttons.parentElement;
       const liEl = form.parentElement;
-      const spanList = form.querySelectorAll("span");
+
+      const spanList = liEl.querySelectorAll("span");
+      console.log(spanList);
 
       const isEditable = [...spanList].every((span) => span.isContentEditable);
 
@@ -160,28 +117,74 @@ function updateExcursions() {
         const id = liEl.dataset.id;
         console.log(id);
         const data = {
-          adultPrice: spanList[0].textContent,
-          childPrice: spanList[1].textContent,
+          name: spanList[0].textContent,
+          description: spanList[1].textContent,
+          adultPrice: spanList[2].textContent,
+          childPrice: spanList[4].textContent,
         };
 
-        console.log(data);
-
-        const options = {
-          method: "PUT",
-          body: JSON.stringify(data),
-          headers: { "Content-Type": "application/json" },
-        };
-        fetch(`${apiUrl}/${id}`, options)
+        api
+          .updateData(id, data)
           .then((resp) => console.log(resp))
           .catch((err) => console.error(err))
           .finally(() => {
             spanList.forEach((span) => (span.contentEditable = false));
+            spanList.forEach((span) => (span.style.color = "white"));
             targetEl.value = "edytuj";
           });
       } else {
         targetEl.value = "zapisz";
         spanList.forEach((span) => (span.contentEditable = true));
+        spanList.forEach((span) => (span.style.color = "blue"));
       }
     }
   });
+}
+
+const createDatatoInsert = function (
+  cityName,
+  TripDescription,
+  adultCost,
+  childCost
+) {
+  const data = {
+    name: cityName.value,
+    description: TripDescription.value,
+    adultPrice: adultCost.value,
+    childPrice: childCost.value,
+  };
+  return data;
+};
+
+function clearFormData(dataToClear1, dataToClear2, dataToClear3, dataToClear4) {
+  dataToClear1.value = "";
+  dataToClear2.value = "";
+  dataToClear3.value = "";
+  dataToClear4.value = "";
+}
+
+function clearHTML(element) {
+  element.innerHTML = "";
+}
+
+function fillExcursionFormChecker(
+  arr,
+  name,
+  description,
+  adultPrice,
+  childPrice
+) {
+  if (name.value === "") {
+    arr.push("Nazwa: to pole jest obowiązkowe");
+  }
+
+  if (description.value === "") {
+    arr.push("Opis: to pole jest obowiązkowe");
+  }
+  if (adultPrice.value === "") {
+    arr.push("Cena dorosły: to pole jest obowiązkowe");
+  }
+  if (childPrice.value === "") {
+    arr.push("Cena dzecko: to pole jest obowiązkowe");
+  }
 }

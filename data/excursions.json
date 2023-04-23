@@ -1,12 +1,33 @@
 {
   "excursions": [
     {
-      "name": "Skierniewice",
-      "description": "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Amet aliquam quam laboriosam quaerat temporibus dicta vitae maxime! Nemo, nobis veritatis?",
-      "adultPrice": "100",
-      "childPrice": "50",
+      "name": "Gdańsk",
+      "description": "Lipsum dolor sit amet consectetur adipisicing elit. Amet\n                aliquam quam laboriosam quaerat temporibus dicta vitae maxime!\n                Nemo, nobis veritatis?",
+      "adultPrice": " 100",
+      "childPrice": " 50",
       "id": 1
+    },
+    {
+      "name": "Opole",
+      "description": "Lipsum dolor sit amet consectetur adipisicing elit. Amet\n                aliquam quam laboriosam quaerat temporibus dicta vitae maxime!\n                Nemo, nobis veritatis?",
+      "adultPrice": " 89",
+      "childPrice": " 39",
+      "id": 2
+    },
+    {
+      "name": "Warszawa",
+      "description": "Lipsum dolor sit amet consectetur adipisicing elit. Amet aliquam quam laboriosam quaerat temporibus dicta vitae maxime! Nemo, nobis veritatis?\n\n",
+      "adultPrice": "100",
+      "childPrice": "35",
+      "id": 3
     }
   ],
-  "orders": []
+  "orders": [
+    {
+      "name": "ariadna nicieja",
+      "email": "kontakt@ponitcestudio.pl",
+      "orderPrice": "390 PLN",
+      "id": 1
+    }
+  ]
 }

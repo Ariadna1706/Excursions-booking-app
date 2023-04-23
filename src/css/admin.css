@@ -1,58 +1,133 @@
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  
+}
+
+body {
+  background: rgb(41, 130, 246);
+  background: linear-gradient(
+    90deg,
+    rgba(41, 130, 246, 1) 2%,
+    rgba(41, 130, 246, 1) 18%,
+    rgba(0, 212, 255, 1) 100%
+  );
+  font-size: 17px;
+  color:#f4f4f4;
+}
+
+
+.header {
+  margin: 7vh auto 0 auto;
+  max-width: 1200px;
 }
 
 ul {
-    list-style: none;
+  list-style: none;
 }
 
 .panel {
-    display: flex;
-    margin: 0 auto;
-    max-width: 1200px;
-    padding: 30px 0;
+  display: flex;
+  margin: 0 auto;
+  max-width: 1200px;
+  padding: 30px 0;
 }
 
-.panel__excursins {
-    width: 70%;
+.panel__excursions {
+  width: 70%;
+  flex-wrap: wrap;
 }
 
 .excursions {
-    display: flex;
-    flex-wrap: wrap;
+  display: flex;
 }
 
-.excurions__item {
-    border: 1px solid #bbb;
-    border-radius: 5px;
-    margin: 10px;
-    padding: 20px;
-    width: calc(50% - 20px);
+.excursions__item {
+  border: 1px solid white;
+  border-radius: 5px;
+  margin: 10px;
+  padding: 20px;
+  width: calc(50% - 20px);
+}
+
+.excursions__description {
+  margin: 1rem 0;
+}
+
+.excursions__field {
+  margin: 1rem 0;
+  font-size: 17px;
+  font-weight: bold;
 }
 
 .panel__form {
-    background-color: #f4f4f4;
-    padding: 20px;
-    width: 30%;
+  background-color: #f4f4f4;
+  padding: 20px;
+  width: 40%;
 }
 
-.uploader, .order {
-    border-bottom: 1px solid #bbb;
-    margin-bottom: 20px;
-    padding-bottom: 20px;
+.uploader,
+.order {
+  border-bottom: 1px solid #bbb;
+  margin-bottom: 20px;
+  padding-bottom: 20px;
 }
 
 .form__field {
-    display: block;
+  display: block;
 }
 
 .form__field--longtext {
-    height: 100px;
+  height: 100px;
+}
+
+.excursions__item--prototype {
+  display: none;
+}
+
+.excursions__field-input,
+.order__field-input {
+  background: rgb(0, 34, 215);
+  background: linear-gradient(
+    90deg,
+    rgba(0, 34, 215, 1) 7%,
+    rgba(52, 49, 210, 1) 37%
+  );
+  padding: 0.5rem 2rem;
+  margin-top: 0.5rem;
+  border-radius: 8px;
+  border: none;
+  font-size: 17px;
+  cursor: pointer;
+}
+
+.order__field--submit, .excursions__field-input--update{
+    color:white !important;
+}
+
+.form__section {
+  
+  padding: 10px 25px;
+}
+
+.excursions__field-input--remove {
+  background: white;
+  color: rgb(37, 10, 148);
+}
+
+.form__header {
+  margin-top: 15px;
+}
+
+.form input {
+  color: black;
+}
+.errors li {
+    color: red;
+    padding-top: 10px ;
+    font-weight: bold;
 }
 
 
-.excursions__item--prototype{
-    display: none;
-}
+
