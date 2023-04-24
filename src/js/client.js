@@ -9,6 +9,8 @@ const liProto = document.querySelector(".excursions__item--prototype");
 const ulEl = document.querySelector(".panel__excursions");
 const summary = document.querySelector(".summary");
 const summaryItem = document.querySelector(".summary__item--prototype");
+const cart = document.querySelector(".cart");
+let cartDis;
 
 document.addEventListener("DOMContentLoaded", init);
 
@@ -19,7 +21,7 @@ function init() {
 
 function loadExcursions() {
   api
-    .loadData()
+    .load()
     .then((data) => {
       insertExcursion(data);
     })
@@ -28,20 +30,17 @@ function loadExcursions() {
 
 function insertExcursion(excursionsArr) {
   excursionsArr.forEach((item) => {
-    const liElement = liProto.cloneNode(true);
-    ulEl.appendChild(liElement);
+    const liElement = createLiClone(liProto);
+    addNewElToDom(ulEl, liElement);
     liElement.classList.remove("excursions__item--prototype");
     const headerEl = liElement.firstElementChild;
-    const cityName = headerEl.firstElementChild;
-    cityName.textContent = item.name;
+    const name = headerEl.firstElementChild;
     const description = headerEl.lastElementChild;
-    description.textContent = item.description;
     const liForm = liElement.lastElementChild;
-    const liLabel = liForm.querySelectorAll("span");
+    const liLabel = findAllSpanElements(liForm);
     const adultPrice = liLabel[0];
-    adultPrice.textContent = +item.adultPrice;
     const childPrice = liLabel[1];
-    childPrice.textContent = +item.childPrice;
+    addExcursionDataToHtml(name, description, adultPrice, childPrice, item);
   });
 }
 
@@ -49,20 +48,15 @@ ulEl.addEventListener("submit", function (e) {
   const item = createBasket(e);
 
   const [adultInput, childInput] = e.target.elements;
-  adultInput.value = "";
-  childInput.value = "";
+  clearComandFormData(adultInput, childInput);
+  cartDisplay(cart, (cartDis = "block"));
 
-  const cart = document.querySelector(".cart");
-  cart.style.display = "block"
-
-  console.log(e.target);
   const summaryTrip = summaryItem.cloneNode(true);
   summaryTrip.classList.remove("summary__item--prototype");
-  summary.appendChild(summaryTrip);
+  addNewElToDom(summary, summaryTrip);
   const summaryTitle = summaryTrip.firstElementChild;
   const cityName = summaryTitle.firstElementChild;
   cityName.textContent = item.title;
-  console.log(cityName.textContent);
   const totalPrice = cityName.nextElementSibling;
   totalPrice.textContent =
     priceSum(
@@ -71,10 +65,8 @@ ulEl.addEventListener("submit", function (e) {
       item.childNumber,
       item.childPrice
     ) + "PLN";
-  console.log(item.childPrice);
 
   const summaryPrice = summaryTrip.lastElementChild;
-
   summaryPrice.textContent =
     "dorośli: " +
     item.adultNumber +
@@ -100,7 +92,6 @@ function allTotalCostToPay() {
   const priceToPay = document.querySelectorAll(
     "li:not(.summary__item--prototype) .summay__total-price"
   );
-  console.log(priceToPay);
   let sum = 0;
   priceToPay.forEach(function (el) {
     sum += parseInt(el.textContent);
@@ -158,21 +149,15 @@ panelOrder.addEventListener("submit", function (e) {
   const ulElement = document.querySelector(".error__list");
   const errors = [];
 
-  if (name.length === 0) {
-    errors.push("Imię i Nazwisko: to pole jest obowiązkowe");
-  }
+  fillExcursionFormChecker(errors, name, email);
 
-  if (!email.includes("@") || email.length === 0) {
-    errors.push("Email: adres email musi zawierać znak @");
-  }
-
-  ulElement.textContent = "";
+  clearHTML(ulElement);
 
   if (errors.length > 0) {
     errors.forEach(function (err) {
       const liElement = document.createElement("li");
       liElement.innerText = err;
-      ulElement.appendChild(liElement);
+      addNewElToDom(ulElement, liElement);
     });
   } else {
     const orderBasket = {
@@ -181,6 +166,7 @@ panelOrder.addEventListener("submit", function (e) {
       orderPrice: orderPrice,
     };
 
+    console.log(orderBasket);
     api
       .addOrders(orderBasket)
       .then((resp) => console.log(resp))
@@ -201,10 +187,60 @@ panelOrder.addEventListener("submit", function (e) {
       item.parentElement.removeChild(item);
     });
 
-    panelOrder.elements[0].value = "";
-    panelOrder.elements[1].value = "";
-    const test = document.querySelector(".order__total-price-value");
+    clearComandFormData(panelOrder.elements[0], panelOrder.elements[1]);
+    const priceValue = document.querySelector(".order__total-price-value");
+    priceValue.textContent = "0PLN";
 
-    test.textContent = "0PLN";
+    cartDisplay(cart, (cartDis = "none"));
   }
 });
+
+const createLiClone = function (proto) {
+  const liElement = proto.cloneNode(true);
+  return liElement;
+};
+
+function addNewElToDom(ul, li) {
+  ul.appendChild(li);
+}
+
+const findAllSpanElements = function (domEl) {
+  const liLabel = domEl.querySelectorAll("span");
+  return liLabel;
+};
+
+function addExcursionDataToHtml(
+  name,
+  description,
+  adultPrice,
+  childPrice,
+  item
+) {
+  name.innerHTML = item.name;
+  description.innerHTML = item.description;
+  adultPrice.innerHTML = +item.adultPrice;
+  childPrice.innerHTML = +item.childPrice;
+}
+
+function clearComandFormData(dataToClear1, dataToClear2) {
+  dataToClear1.value = "";
+  dataToClear2.value = "";
+}
+
+function clearHTML(element) {
+  element.innerHTML = "";
+}
+
+function fillExcursionFormChecker(arr, name, email) {
+  if (name.length === 0) {
+    arr.push("Imię i Nazwisko: to pole jest obowiązkowe");
+  }
+
+  if (!email.includes("@") || email.length === 0) {
+    arr.push("Email: adres email musi zawierać znak @");
+  }
+}
+
+function cartDisplay(cart, cartDis = "none") {
+  cart.style.display = cartDis;
+}

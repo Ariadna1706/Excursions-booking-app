@@ -3,12 +3,9 @@ import "./../css/admin.css";
 import ExcursionsAPI from "./ExcursionsAPI";
 
 const api = new ExcursionsAPI();
-
 const liProto = document.querySelector(".excursions__item--prototype");
 const ulEl = document.querySelector(".panel__excursions");
-
 document.addEventListener("DOMContentLoaded", init);
-
 function init() {
   console.log("DOM admin");
   loadExcursions();
@@ -19,7 +16,7 @@ function init() {
 
 function loadExcursions() {
   api
-    .loadData()
+    .load()
     .then((data) => {
       insertExcursion(data);
     })
@@ -36,16 +33,14 @@ function addExcursions() {
     fillExcursionFormChecker(errors, name, description, adultPrice, childPrice);
     const ulEl = document.querySelector(".errors");
     clearHTML(ulEl);
-
     if (errors.length > 0) {
       errors.forEach((err) => {
-        const liElement = document.createElement("li");
-        liElement.innerText = err;
-        ulEl.appendChild(liElement);
+        const liElement = createLiEl(err);
+        addNewLiToDom(ulEl, liElement);
       });
     } else {
       api
-        .addData(data)
+        .add(data)
         .catch((err) => console.error(err))
         .finally(loadExcursions);
       clearFormData(name, description, adultPrice, childPrice);
@@ -55,41 +50,31 @@ function addExcursions() {
 
 function insertExcursion(excursionsArr) {
   clearHTML(ulEl);
-
   excursionsArr.forEach((item) => {
-    const liElement = liProto.cloneNode(true);
-    ulEl.appendChild(liElement);
+    const liElement = createLiClone(liProto);
+    addNewLiToDom(ulEl, liElement);
     liElement.classList.remove("excursions__item--prototype");
     const headerEl = liElement.firstElementChild;
-    const cityName = headerEl.firstElementChild;
+    const name = headerEl.firstElementChild;
     const description = headerEl.lastElementChild;
-    // description.textContent = item.description;
     const liForm = liElement.lastElementChild;
-    const liLabel = liForm.querySelectorAll("span");
+    const liLabel = findAllSpanElements(liForm);
     const adultPrice = liLabel[0];
     const childPrice = liLabel[1];
     liElement.dataset.id = item.id;
-
-    cityName.innerHTML = ` <span>${item.name}</span> `;
-    description.innerHTML = ` <span>${item.description}</span> `;
-    adultPrice.innerHTML = ` <span>${+item.adultPrice}</span>`;
-    childPrice.innerHTML = ` <span>${+item.childPrice}</span>`;
+    addExcursionDataToHtml(name, description, adultPrice, childPrice, item);
   });
 }
 
 function removeExcursions() {
   ulEl.addEventListener("click", (e) => {
     e.preventDefault();
-
     const targetEl = e.target;
-
     console.log(targetEl);
-    // problem z działaniem tej funkcji
-    if (targetEl.value === "usuń") {
-      const id = ulEl.firstElementChild.dataset.id;
-      console.log(id);
+    if (targetEl.className.includes("excursions__field-input--remove")) {
+      const id = targetEl.parentElement.parentElement.parentElement.dataset.id;
       api
-        .removeData(id)
+        .remove(id)
         .then((resp) => console.log(resp))
         .catch((err) => console.error(err))
         .finally(loadExcursions);
@@ -107,35 +92,34 @@ function updateExcursions() {
       const buttons = targetEl.parentElement;
       const form = buttons.parentElement;
       const liEl = form.parentElement;
-
-      const spanList = liEl.querySelectorAll("span");
-      console.log(spanList);
-
-      const isEditable = [...spanList].every((span) => span.isContentEditable);
+      const spanList = findAllSpanElements(liEl);
+      const isEditable = makeElementsEditable(spanList);
+      let fontColor;
 
       if (isEditable) {
         const id = liEl.dataset.id;
-        console.log(id);
-        const data = {
-          name: spanList[0].textContent,
-          description: spanList[1].textContent,
-          adultPrice: spanList[2].textContent,
-          childPrice: spanList[4].textContent,
-        };
+
+        const data = dataToInsertInHtml(
+          spanList[0],
+          spanList[2],
+          spanList[3],
+          spanList[4]
+        );
 
         api
-          .updateData(id, data)
+          .update(id, data)
           .then((resp) => console.log(resp))
           .catch((err) => console.error(err))
           .finally(() => {
-            spanList.forEach((span) => (span.contentEditable = false));
-            spanList.forEach((span) => (span.style.color = "white"));
+            toggleIsEditable(spanList, false);
+            setFontColor(spanList, (fontColor = "white"));
             targetEl.value = "edytuj";
           });
       } else {
         targetEl.value = "zapisz";
-        spanList.forEach((span) => (span.contentEditable = true));
-        spanList.forEach((span) => (span.style.color = "blue"));
+        toggleIsEditable(spanList, true);
+        setFontColor(spanList, (fontColor = "blue"));
+        
       }
     }
   });
@@ -152,6 +136,21 @@ const createDatatoInsert = function (
     description: TripDescription.value,
     adultPrice: adultCost.value,
     childPrice: childCost.value,
+  };
+  return data;
+};
+
+const dataToInsertInHtml = function (
+  cityName,
+  TripDescription,
+  adultCost,
+  childCost
+) {
+  const data = {
+    name: cityName.textContent,
+    description: TripDescription.textContent,
+    adultPrice: adultCost.textContent,
+    childPrice: childCost.textContent,
   };
   return data;
 };
@@ -187,4 +186,50 @@ function fillExcursionFormChecker(
   if (childPrice.value === "") {
     arr.push("Cena dzecko: to pole jest obowiązkowe");
   }
+}
+
+const createLiEl = function (err) {
+  const liElement = document.createElement("li");
+  liElement.innerText = err;
+  return liElement;
+};
+
+function addNewLiToDom(ul, li) {
+  ul.appendChild(li);
+}
+
+const createLiClone = function (proto) {
+  const liElement = proto.cloneNode(true);
+  return liElement;
+};
+
+const findAllSpanElements = function (domEl) {
+  const liLabel = domEl.querySelectorAll("span");
+  return liLabel;
+};
+
+function addExcursionDataToHtml(
+  name,
+  description,
+  adultPrice,
+  childPrice,
+  item
+) {
+  name.innerHTML = ` <span>${item.name}</span> `;
+  description.innerHTML = ` <span>${item.description}</span> `;
+  adultPrice.innerHTML = ` <span>${+item.adultPrice}</span>`;
+  childPrice.innerHTML = ` <span>${+item.childPrice}</span>`;
+}
+
+const makeElementsEditable = function (arr) {
+  const isEditable = [...arr].every((item) => item.isContentEditable);
+  return isEditable;
+};
+
+function toggleIsEditable(arr, condition) {
+  arr.forEach((span) => (span.contentEditable = condition));
+}
+
+function setFontColor(arr, fontColor = "white") {
+  arr.forEach((item) => (item.style.color = fontColor));
 }
