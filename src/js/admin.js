@@ -59,8 +59,7 @@ function insertExcursion(excursionsArr) {
     const description = headerEl.lastElementChild;
     const liForm = liElement.lastElementChild;
     const liLabel = findAllSpanElements(liForm);
-    const adultPrice = liLabel[0];
-    const childPrice = liLabel[1];
+    const [adultPrice, childPrice] = liLabel;
     liElement.dataset.id = item.id;
     addExcursionDataToHtml(name, description, adultPrice, childPrice, item);
   });
@@ -119,7 +118,6 @@ function updateExcursions() {
         targetEl.value = "zapisz";
         toggleIsEditable(spanList, true);
         setFontColor(spanList, (fontColor = "blue"));
-        
       }
     }
   });

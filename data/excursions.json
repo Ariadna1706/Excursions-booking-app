@@ -16,35 +16,7 @@
     }
   ],
   "orders": [
-    {
-      "name": "ariadna nicieja",
-      "email": "kontakt@ponitcestudio.pl",
-      "orderPrice": "390 PLN",
-      "id": 1
-    },
-    {
-      "name": "ariadna nicieja",
-      "email": "kontakt@ponitcestudio.pl",
-      "orderPrice": "63 PLN",
-      "id": 2
-    },
-    {
-      "name": "Anna Zawadzka",
-      "email": "kontakt@noemail.com",
-      "orderPrice": "1400 PLN",
-      "id": 3
-    },
-    {
-      "name": "Małgorzata Gryz",
-      "email": "malgosia@noemail.com",
-      "orderPrice": "1400 PLN",
-      "id": 4
-    },
-    {
-      "name": "Michał Zebra",
-      "email": "zebra@noemail.com",
-      "orderPrice": "1500 PLN",
-      "id": 5
-    }
+    
+   
   ]
 }

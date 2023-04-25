@@ -38,8 +38,8 @@ function insertExcursion(excursionsArr) {
     const description = headerEl.lastElementChild;
     const liForm = liElement.lastElementChild;
     const liLabel = findAllSpanElements(liForm);
-    const adultPrice = liLabel[0];
-    const childPrice = liLabel[1];
+
+    const [adultPrice, childPrice] = liLabel;
     addExcursionDataToHtml(name, description, adultPrice, childPrice, item);
   });
 }
@@ -49,7 +49,7 @@ ulEl.addEventListener("submit", function (e) {
 
   const [adultInput, childInput] = e.target.elements;
   clearComandFormData(adultInput, childInput);
-  cartDisplay(cart, (cartDis = "block"));
+  cartDisplay(cart, "block");
 
   const summaryTrip = summaryItem.cloneNode(true);
   summaryTrip.classList.remove("summary__item--prototype");
@@ -144,12 +144,20 @@ panelOrder.addEventListener("submit", function (e) {
     ".order__total-price-value"
   ).textContent;
 
-  const name = panelOrder.elements[0].value;
-  const email = panelOrder.elements[1].value;
+  console.log(orderPrice);
+
+  const orderDetails = document.querySelectorAll(
+    "li:not(.summary__item--prototype).summary__item"
+  );
+
+  const [name, email] = panelOrder.elements;
+  const nameVal = name.value;
+  const emailVal = email.value;
+
   const ulElement = document.querySelector(".error__list");
   const errors = [];
 
-  fillExcursionFormChecker(errors, name, email);
+  fillExcursionFormChecker(errors, nameVal, emailVal);
 
   clearHTML(ulElement);
 
@@ -160,10 +168,20 @@ panelOrder.addEventListener("submit", function (e) {
       addNewElToDom(ulElement, liElement);
     });
   } else {
+    const orderDetailsarr = [];
+
+    orderDetails.forEach((item) => {
+      const h3El = item.firstElementChild;
+      const title = h3El.firstElementChild.textContent;
+      const participants = item.lastElementChild.textContent;
+      orderDetailsarr.push(title, participants);
+    });
+
     const orderBasket = {
-      name: name,
-      email: email,
+      name: nameVal,
+      email: emailVal,
       orderPrice: orderPrice,
+      orderDetails: orderDetailsarr,
     };
 
     console.log(orderBasket);
@@ -176,7 +194,7 @@ panelOrder.addEventListener("submit", function (e) {
       "Dziękujemy za złożenie zamówienia o wartości " +
         orderPrice +
         ". Szczegóły zamówienia zostały wysłane na adres e-mail: " +
-        email
+        emailVal
     );
 
     const summaryItem = document.querySelectorAll(
@@ -191,7 +209,7 @@ panelOrder.addEventListener("submit", function (e) {
     const priceValue = document.querySelector(".order__total-price-value");
     priceValue.textContent = "0PLN";
 
-    cartDisplay(cart, (cartDis = "none"));
+    cartDisplay(cart, "none");
   }
 });
 
@@ -241,6 +259,6 @@ function fillExcursionFormChecker(arr, name, email) {
   }
 }
 
-function cartDisplay(cart, cartDis = "none") {
+function cartDisplay(cart, cartDis = "") {
   cart.style.display = cartDis;
 }
