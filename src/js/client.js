@@ -10,7 +10,6 @@ const ulEl = document.querySelector(".panel__excursions");
 const summary = document.querySelector(".summary");
 const summaryItem = document.querySelector(".summary__item--prototype");
 const cart = document.querySelector(".cart");
-let cartDis;
 
 document.addEventListener("DOMContentLoaded", init);
 
@@ -49,43 +48,8 @@ ulEl.addEventListener("submit", function (e) {
 
   const [adultInput, childInput] = e.target.elements;
   clearComandFormData(adultInput, childInput);
-  cartDisplay(cart, "block");
-
-  const summaryTrip = summaryItem.cloneNode(true);
-  summaryTrip.classList.remove("summary__item--prototype");
-  addNewElToDom(summary, summaryTrip);
-  const summaryTitle = summaryTrip.firstElementChild;
-  const cityName = summaryTitle.firstElementChild;
-  cityName.textContent = item.title;
-  const totalPrice = cityName.nextElementSibling;
-  totalPrice.textContent =
-    priceSum(
-      item.adultNumber,
-      item.adultPrice,
-      item.childNumber,
-      item.childPrice
-    ) + "PLN";
-
-  const summaryPrice = summaryTrip.lastElementChild;
-  summaryPrice.textContent =
-    "dorośli: " +
-    item.adultNumber +
-    " x " +
-    item.adultPrice +
-    "PLN, " +
-    "dzieci: " +
-    item.childNumber +
-    " x " +
-    item.childPrice +
-    "PLN";
-
-  const removebtn = totalPrice.nextElementSibling;
-  removebtn.addEventListener("click", function (e) {
-    e.preventDefault();
-    summary.removeChild(summaryTrip);
-    allTotalCostToPay();
-  });
-  allTotalCostToPay();
+  showCart(cart);
+  manageExcursionSummary(summaryItem, item);
 });
 
 function allTotalCostToPay() {
@@ -209,7 +173,7 @@ panelOrder.addEventListener("submit", function (e) {
     const priceValue = document.querySelector(".order__total-price-value");
     priceValue.textContent = "0PLN";
 
-    cartDisplay(cart, "none");
+    removeCart(cart);
   }
 });
 
@@ -259,6 +223,48 @@ function fillExcursionFormChecker(arr, name, email) {
   }
 }
 
-function cartDisplay(cart, cartDis = "") {
-  cart.style.display = cartDis;
+function showCart(cart) {
+  cart.style.display = "block";
+}
+
+function removeCart(cart) {
+  cart.style.display = "none";
+}
+
+function manageExcursionSummary(summaryItem, item) {
+  const summaryTrip = summaryItem.cloneNode(true);
+  summaryTrip.classList.remove("summary__item--prototype");
+  addNewElToDom(summary, summaryTrip);
+  const summaryTitle = summaryTrip.firstElementChild;
+  const cityName = summaryTitle.firstElementChild;
+  cityName.textContent = item.title;
+  const totalPrice = cityName.nextElementSibling;
+  totalPrice.textContent =
+    priceSum(
+      item.adultNumber,
+      item.adultPrice,
+      item.childNumber,
+      item.childPrice
+    ) + "PLN";
+
+  const summaryPrice = summaryTrip.lastElementChild;
+  summaryPrice.textContent =
+    "dorośli: " +
+    item.adultNumber +
+    " x " +
+    item.adultPrice +
+    "PLN, " +
+    "dzieci: " +
+    item.childNumber +
+    " x " +
+    item.childPrice +
+    "PLN";
+
+  const removebtn = totalPrice.nextElementSibling;
+  removebtn.addEventListener("click", function (e) {
+    e.preventDefault();
+    summary.removeChild(summaryTrip);
+    allTotalCostToPay();
+  });
+  allTotalCostToPay();
 }

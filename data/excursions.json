@@ -3,20 +3,35 @@
     {
       "name": "Paryż ",
       "description": "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Amet\n              aliquam quam laboriosam quaerat temporibus dicta vitae maxime!\n              Nemo, nobis veritatis?\n              ",
-      "adultPrice": "700",
+      "adultPrice": " 550",
       "childPrice": "350",
       "id": 1
     },
     {
       "name": "Londyn",
-      "description": "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Amet\n              aliquam quam laboriosam quaerat temporibus dicta vitae maxime!\n              Nemo, nobis veritatis?\n              ",
-      "adultPrice": "550",
-      "childPrice": "400",
+      "description": "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Amet aliquam quam laboriosam quaerat temporibus dicta vitae maxime!",
+      "adultPrice": "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Amet aliquam quam laboriosam quaerat temporibus dicta vitae maxime!",
+      "childPrice": "300",
       "id": 2
+    },
+    {
+      "name": "Madryt",
+      "description": "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Amet aliquam quam laboriosam quaerat temporibus dicta vitae maxime!",
+      "adultPrice": "600",
+      "childPrice": "450",
+      "id": 3
     }
   ],
   "orders": [
-    
-   
+    {
+      "name": "Małgorzata Ewart",
+      "email": "malgosia@noemail.com",
+      "orderPrice": "2850 PLN",
+      "orderDetails": [
+        "Paryż ",
+        "dorośli: 2 x 550PLN, dzieci: 5 x 350PLN"
+      ],
+      "id": 1
+    }
   ]
 }

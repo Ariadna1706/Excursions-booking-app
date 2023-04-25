@@ -69,7 +69,6 @@ function removeExcursions() {
   ulEl.addEventListener("click", (e) => {
     e.preventDefault();
     const targetEl = e.target;
-    console.log(targetEl);
     if (targetEl.className.includes("excursions__field-input--remove")) {
       const id = targetEl.parentElement.parentElement.parentElement.dataset.id;
       api
@@ -91,19 +90,22 @@ function updateExcursions() {
       const buttons = targetEl.parentElement;
       const form = buttons.parentElement;
       const liEl = form.parentElement;
+
       const spanList = findAllSpanElements(liEl);
       const isEditable = makeElementsEditable(spanList);
-      let fontColor;
+      const [cityName, description, priceAdult,, priceChildren] = spanList;
 
       if (isEditable) {
         const id = liEl.dataset.id;
-
         const data = dataToInsertInHtml(
-          spanList[0],
-          spanList[2],
-          spanList[3],
-          spanList[4]
+          cityName,
+          description,
+          priceAdult,
+          priceChildren,
         );
+
+        console.log(data)
+          console.log(spanList);
 
         api
           .update(id, data)
@@ -111,13 +113,13 @@ function updateExcursions() {
           .catch((err) => console.error(err))
           .finally(() => {
             toggleIsEditable(spanList, false);
-            setFontColor(spanList, (fontColor = "white"));
+            setInctiveFontColor(spanList);
             targetEl.value = "edytuj";
           });
       } else {
         targetEl.value = "zapisz";
         toggleIsEditable(spanList, true);
-        setFontColor(spanList, (fontColor = "blue"));
+        setActiveFontColor(spanList);
       }
     }
   });
@@ -228,6 +230,10 @@ function toggleIsEditable(arr, condition) {
   arr.forEach((span) => (span.contentEditable = condition));
 }
 
-function setFontColor(arr, fontColor = "white") {
-  arr.forEach((item) => (item.style.color = fontColor));
+function setActiveFontColor(arr) {
+  arr.forEach((item) => (item.style.color = "blue"));
+}
+
+function setInctiveFontColor(arr) {
+  arr.forEach((item) => (item.style.color = "white"));
 }
