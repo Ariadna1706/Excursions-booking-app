@@ -3,8 +3,6 @@
 
 This project is a small web application created to manage excursions sell online. 
 
-See the live version of [ Excursions Booking App]().
-
 
 The Application has two panels (client panel and admin panel)
 
