@@ -40,7 +40,7 @@ The Application has two panels (client panel and admin panel)
 
 ## 💿 Installation
 
-The project uses [node](https://nodejs.org/en/), [npm](https://www.npmjs.com/) and [jsonServer](https://www.npmjs.com/package/json-server). Having them installed, type into the terminal: `npm i` and `npm install json-server -g`.
+The project uses [node](https://nodejs.org/en/), [npm](https://www.npmjs.com/) and [JSONServer](https://www.npmjs.com/package/json-server). Having them installed, type into the terminal: `npm i` and `npm install json-server -g`.
 
 
 &nbsp;
@@ -70,11 +70,11 @@ some example code:
 ```
 
 
-- use of JSONServer to be able to work with API
+- use of **JSONServer** to be able to work with **API**
 - use GET, POST, DELETE, PUT actions   
 - code refactoring 
-- use of Webpack to be able to use all ECMAScript2015 solutions
-- use of ECMAScript2015 solutions (for example : template strings, destructuring, spread operator ect)
+- use of **Webpack** to be able to use all ECMAScript2015 solutions
+- use of **ECMAScript 2015** solutions (for example : template strings, destructuring, spread operator ect)
 
 
 
